@@ -16,7 +16,7 @@ _Chunk-Factory is a fast, efficient text chunking library with real-time evaluat
 [Supported Methods](#supported-methods) •
 [TODO](#TODO) •
 [References](#References) •
-[Citation](#Citation) 
+[Citation](#Citation) •
 
 </div>
 
