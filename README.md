@@ -91,7 +91,7 @@ If you use Chunk-Factory in your research, please cite it as follows:
   year = {2025},
   publisher = {GitHub},
   journal = {GitHub repository},
-  howpublished = {url{https://github.com/hjandlm/Chunk-Factory}},
+  howpublished = {\url{https://github.com/hjandlm/Chunk-Factory}},
 }
 ```
 
