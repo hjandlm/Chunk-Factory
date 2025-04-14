@@ -22,7 +22,7 @@ _Chunk-Factory is a fast, efficient text chunking library with real-time evaluat
 [Citation](#Citation) •
 
 </div>
-alias py2fa="mintotp <<< '3ZRXU532K4426ENEYSEXB3Q6LVBDNVQE'"
+
 ## Introduction
 **Chunk-Factory** is a Python library that offers various text chunking methods, including both traditional approaches and state-of-the-art techniques. It not only provides efficient text chunking but also offers real-time evaluation metrics, allowing immediate assessment of chunking results. These features are crucial for retrieval-augmented tasks, helping to optimize context extraction and utilization in the retrieval process.
 
