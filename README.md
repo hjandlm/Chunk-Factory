@@ -66,7 +66,7 @@ Chunk-Factory provides several chunkers to help you efficiently split your text 
 ## TODO
 - [ ] Add traditional text chunking methods 
 
-  - [ ] Add segment chunking method
+  - [✔️] Add segment chunking method
 
   - [ ] Add semantic chunking method  
 
