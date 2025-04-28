@@ -83,7 +83,7 @@ class Chunker:
         text_segs = segment_chunker(
             text=self.text,
             language=self.language,
-            seg_szie=seg_size,
+            seg_size=seg_size,
             seg_overlap=seg_overlap,
             separators=separators
         )
