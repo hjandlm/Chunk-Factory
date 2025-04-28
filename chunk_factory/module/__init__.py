@@ -8,6 +8,10 @@ def basechunker(*args, **kwargs):
     from .baseChunker import basechunker
     return basechunker(*args, **kwargs)
 
+def segment_chunker(*args, **kwargs):
+    from .segmentChunker import segmentchunker
+    return segmentchunker(*args, **kwargs)
+
 def denseX_chunker(*args, **kwargs):
     from .densexChunker import denseX_chunker
     return denseX_chunker(*args, **kwargs)
