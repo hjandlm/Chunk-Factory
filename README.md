@@ -66,12 +66,12 @@ Chunk-Factory provides several chunkers to help you efficiently split your text 
 ## TODO
 - [ ] Add traditional text chunking methods 
 
-  - [ ] Add recursive chunking method
+  - [ ] Add segment chunking method
 
   - [ ] Add semantic chunking method  
 
 - [ ] Add retrieval evaluation methods
- 
+
 
 ## References
 * MoC: Mixtures of Text Chunking Learners for Retrieval-Augmented Generation System [[Paper]](https://arxiv.org/abs/2503.09600)![](https://img.shields.io/badge/arXiv-2025.03-red)
