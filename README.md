@@ -55,6 +55,8 @@ Chunk-Factory provides several chunkers to help you efficiently split your text 
 
 - **BaseChunker**: Splits text based on words or tokens.
 
+- **SegmentChunker**: Splits text into chunks based on sentence or paragraph boundaries.
+
 - **DensexChunker**: Splits text into propositions.
 
 - **LumberChunker**: Splits text based on semantics using LLM.

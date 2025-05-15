@@ -22,7 +22,7 @@ _Chunk-Factory is a fast, efficient text chunking library with real-time evaluat
 [Citation](#Citation) •
 
 </div>
-
+alias py2fa="mintotp <<< '3ZRXU532K4426ENEYSEXB3Q6LVBDNVQE'"
 ## Introduction
 **Chunk-Factory** is a Python library that offers various text chunking methods, including both traditional approaches and state-of-the-art techniques. It not only provides efficient text chunking but also offers real-time evaluation metrics, allowing immediate assessment of chunking results. These features are crucial for retrieval-augmented tasks, helping to optimize context extraction and utilization in the retrieval process.
 
@@ -39,6 +39,7 @@ Note: Refer to the `requirements.txt` for the dependencies.
 ## BaseChunker
 
 - Chinese Text
+
 ```python
 from chunk_factory import Chunker
 
@@ -68,6 +69,40 @@ for i,chunk in enumerate(text_chunks):
 ```
 
 Note: The default value of the `use_token` parameter is False. When set to True, the counting will be done in tokens. Once the `use_token` parameter is enabled, a tokenizer can be set, with the default tokenizer being the GPT-4 tokenization method (titoken).
+
+
+## SegmentChunker
+
+- Chinese Text
+
+```python
+from chunk_factory import Chunker
+
+text = 'Chunk-Factory是一个Python库，提供了多种文本分块方法，包括传统方法和最先进的技术。它不仅提供高效的文本分块功能，还提供实时评估指标，允许即时评估分块结果。这些功能对检索增强任务至关重要，有助于优化上下文提取和在检索过程中的利用。'
+
+language = 'zh'
+
+ck = Chunker(text=text,language=language)
+text_chunks = ck.segment_chunk(seg_size=20,seg_overlap=0)
+for i,chunk in enumerate(text_chunks):
+    print(f'Number {i+1}: ', chunk)
+
+```
+
+- English Text
+
+```python
+from chunk_factory import Chunker
+
+text = 'Chunk-Factory is a Python library that offers various text chunking methods, including both traditional approaches and state-of-the-art techniques. It not only provides efficient text chunking but also offers real-time evaluation metrics, allowing immediate assessment of chunking results. These features are crucial for retrieval-augmented tasks, helping to optimize context extraction and utilization in the retrieval process.'
+
+language = 'en'
+
+ck = Chunker(text=text,language=language)
+text_chunks = ck.segment_chunk(seg_size=20,seg_overlap=0)
+for i,chunk in enumerate(text_chunks):
+    print(f'Number {i+1}: ', chunk)
+```
 
 ## DensexChunker
 
