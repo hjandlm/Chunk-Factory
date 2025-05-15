@@ -42,6 +42,10 @@ class Chunker:
         """
         self.text = text
         self.language = language
+        if not language or language not in ['zh','en']:
+            raise Exception("Please check the language parameter. Valid options are: 'zh', 'en'")
+        if not text:
+            raise Exception("The `text` parameter cannot be empty. Please provide input text.")
 
     def basechunk(
         self, 
@@ -72,7 +76,7 @@ class Chunker:
             chunk_overlap=chunk_overlap
         )
         return text_chunks
-    
+
     def segment_chunk(
         self,
         seg_size: int = 200,
@@ -88,7 +92,6 @@ class Chunker:
             separators=separators
         )
         return text_segs
-    
     
     def denseX_chunk(
         self, 

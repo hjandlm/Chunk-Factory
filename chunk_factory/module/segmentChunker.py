@@ -15,17 +15,17 @@ def segmentchunker(
     separators: List[str] = None
 ) -> List[str]:
     """
-    Paragraph segmentation, supports setting delimiters and overlapping paragraph count
+    Segment Chunking with Custom Separators and Overlap Support
     
     Parameters:
-    text: The original text to be split
-    language: Language type ('zh'/'en')
-    seg_size: Target block size (in characters)
-    seg_overlap: The number of overlapping blocks between segments, not the number of characters
-    separators: Custom delimiter list
-    
+    text: The original text to be split.
+    language: Language type ('zh' for Chinese / 'en' for English).
+    seg_size: Target chunk size (measured in characters for Chinese, words for English).
+    seg_overlap: Number of overlapping chunks between segments.
+    separators: Custom list of separators.
+
     Returns:
-    List[str]: A list of text blocks after segmentation
+    List[str]: A list of segmented text chunks.
     """
 
     if seg_size <= 0:
@@ -33,63 +33,105 @@ def segmentchunker(
     if seg_overlap < 0:
         raise ValueError("seg_overlap cannot be negative")
 
+    text = text.replace('\n','')
+
     lang_config = {
-        'zh': ['\n\n', '\n', '。', '！', '？', '；', '，', '、'],
-        'en': ['\n\n', '\n', '.', '!', '?', ';', ',']
+        'zh': {
+            'separators': ['\n\n', '\n', '。', '！', '？', '；', '，', '、'],
+            'split_space': False
+        },
+        'en': {
+            'separators': ['\n\n', '\n', '.', '!', '?', ';', ','],
+            'split_space': True
+        }
     }
-    separators = separators or lang_config.get(language, [])
-    
-    split_segs = []
-    if separators:
-        separators_sorted = sorted(separators, key=lambda x: (-len(x), x))
-        pattern = re.compile(r'(' + r'|'.join(map(re.escape, separators_sorted)) + r')')
-        parts = pattern.split(text)
-        
-        merged = []
-        for i in range(0, len(parts), 2):
-            segment = parts[i].strip()
-            if i+1 < len(parts):
-                segment += parts[i+1].strip() 
-            if segment:
-                merged.append(segment)
-        split_segs = merged
+    lang = lang_config[language]
+    separators = separators or lang['separators']
+    sep_pattern = r'(' + r'|'.join(map(re.escape, separators)) + r')'
+    text_pattern = r'[^' + ''.join(map(re.escape, separators)) + r']+'  # 匹配非分隔符的部分
+
+    text_list_re = re.findall(text_pattern, text)
+    if text_list_re:
+        text_list = [t.strip() for t in text_list_re]
     else:
-        if text.strip():
-            split_segs = [text.strip()]
+        return []
+    separator_list = re.findall(sep_pattern, text)
 
     chunks = []
-    n = len(split_segs)
-    i = 0
     
-    while i < n:
-        start_idx = i
-        current_chunk = []
-        current_len = 0
+    current_chunk = ''
+    pre_chunk = ''
+    end_flag = False
+    if language=='zh':
         
-        while i < n and current_len + len(split_segs[i]) <= seg_size:
-            current_chunk.append(split_segs[i])
-            current_len += len(split_segs[i])
-            i += 1
-        
-        if (remaining := sum(len(s) for s in split_segs[i:])) > 0:
-            if 0 < remaining < seg_size and (current_len + remaining) <= seg_size:
-                current_chunk.extend(split_segs[i:])
-                i = n
-        
-        if current_chunk:
-            chunks.append(''.join(current_chunk))
-            if seg_overlap > 0 and i < n:
-                effective_overlap = min(seg_overlap, len(current_chunk))                
-                i = max(start_idx + len(current_chunk) - effective_overlap, start_idx + 1)
-
-    return chunks
-                
+        for index,text in enumerate(text_list):
+            current_chunk+=text
+            current_chunk+=separator_list[index]
+            try:
+                pre_chunk = current_chunk+text_list[index+1]
+                pre_chunk = pre_chunk+separator_list[index+1]
+            except Exception as e:
+                chunks.append(current_chunk)
+                current_chunk = ''
+                break
             
+            if len(pre_chunk)>seg_size:
+                if seg_overlap>0:
+                    for oi in range(seg_overlap):
+                        try:
+                            next_text = text_list[index+oi+1]
+                            current_chunk+=next_text
+                            current_chunk+=separator_list[index+oi+1]
+                        except Exception as e:
+                            end_flag = True
+                        if end_flag:
+                            chunks.append(current_chunk)
+                            current_chunk = ''
+                            break
+                    if not end_flag:
+                        chunks.append(current_chunk)  
+                        current_chunk = ''  
+                else:
+                    chunks.append(current_chunk)
+                    current_chunk = ''   
+    elif language=='en':
+        for index,text in enumerate(text_list):
+            if len(current_chunk)==0:
+                current_chunk = text
+                current_chunk+=separator_list[index]
+            else:
+                current_chunk = current_chunk+' '+text
+                current_chunk+=separator_list[index]
+                
+            try:
+                pre_chunk = current_chunk+' '+text_list[index+1]
+                pre_chunk = pre_chunk+separator_list[index+1]
+            except Exception as e:
+                chunks.append(current_chunk)
+                current_chunk = ''
+                break
+            if len(pre_chunk.split(' '))>seg_size:
+                if seg_overlap>0:
+                    for oi in range(seg_overlap):
+                        try:
+                            next_text = text_list[index+oi+1]
+                            current_chunk = current_chunk+' '+next_text
+                            current_chunk+=separator_list[index+oi+1]
+                        except Exception as e:
+                            end_flag = True
+                        if end_flag:
+                            chunks.append(current_chunk)
+                            current_chunk = ''
+                            break
+                    if not end_flag:
+                        chunks.append(current_chunk)  
+                        current_chunk = ''  
+                else:
+                    chunks.append(current_chunk)
+                    current_chunk = ''
+
+    if current_chunk:
+        chunks.append(current_chunk)
     
-    
-    
-    
-    
-    
-    
-    
+    return chunks
+            
